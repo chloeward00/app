@@ -15,6 +15,7 @@ export default function Dashboard({ navigation }) {
       .collection('users')
       .doc(currentUserUID)
       .get();
+     
 
       if (!doc.exists){
         Alert.alert('No user data found!')
@@ -24,6 +25,17 @@ export default function Dashboard({ navigation }) {
       }
     }
     getUserInfo();
+
+    function useAsync(asyncFn, onSuccess) {
+      useEffect(() => {
+        let isMounted = true;
+        asyncFn().then(data => {
+          if (isMounted) onSuccess(data);
+        });
+        return () => { isMounted = false };
+      }, [asyncFn, onSuccess]);
+    }
+    
   })
 
   const handlePress = () => {
@@ -41,3 +53,13 @@ export default function Dashboard({ navigation }) {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center"
+  
+  }
+  
+  })
